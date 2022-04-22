@@ -1,0 +1,9 @@
+.db/*
+.App/vendor
+.App/vendor/*
+.App/public/images/*
+.App/phpunit.xml.dist
+/var/cache/*
+/var/logs/*
+.idea/
+.idea/*

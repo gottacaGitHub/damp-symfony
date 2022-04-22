@@ -1,0 +1,72 @@
+security:
+
+    role_hierarchy:
+        ROLE_MANAGER:
+            - ROLE_SONATA_STUFF
+            - ROLE_SONATA_ADMIN
+            # user
+            - ROLE_ADMIN_USER_LIST
+            - ROLE_ADMIN_USER_VIEW
+            # product
+            - ROLE_ADMIN_PRODUCTS_LIST
+            - ROLE_ADMIN_PRODUCTS_VIEW
+        ROLE_ADMIN:
+            - ROLE_SONATA_ADMIN
+            # user
+            - ROLE_ADMIN_USER_CREATE
+            - ROLE_ADMIN_USER_DELETE
+            - ROLE_ADMIN_USER_EDIT
+            - ROLE_ADMIN_USER_LIST
+            - ROLE_ADMIN_USER_VIEW
+            - ROLE_ADMIN_USER_EXPORT
+            - ROLE__ADMIN_USER_OPERATOR
+            - ROLE_ADMIN_USER_MASTER
+            # product
+            - ROLE_ADMIN_PRODUCTS_CREATE
+            - ROLE_ADMIN_PRODUCTS_DELETE
+            - ROLE_ADMIN_PRODUCTS_EDIT
+            - ROLE_ADMIN_PRODUCTS_LIST
+            - ROLE_ADMIN_PRODUCTS_VIEW
+            - ROLE_ADMIN_PRODUCTS_EXPORT
+            - ROLE_ADMIN_PRODUCTS_OPERATOR
+            - ROLE_ADMIN_PRODUCTS_MASTER
+
+        ROLE_SUPER_ADMIN:
+            - ROLE_ADMIN
+            - ROLE_ALLOWED_TO_SWITCH
+
+    encoders:
+        App\Entity\User:
+            algorithm: auto
+
+    providers:
+        users:
+            id: App\Security\UserProvider
+    firewalls:
+        admin:
+            pattern: /admin(.*)
+            form_login:
+                provider: users
+                login_path: admin_login
+                use_forward: false
+                check_path: admin_login
+                failure_path: null
+            logout:
+                path: admin_logout
+                target: admin_login
+            anonymous: true
+            guard:
+                authenticators:
+                    - App\Security\LoginAuthenticator
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: ~
+
+    access_control:
+        - { path: ^/admin/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/logout$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/, role: [ ROLE_MANAGER, ROLE_ADMIN, ROLE_SONATA_ADMIN,IS_AUTHENTICATED_FULLY ] }
+
+
