@@ -4,13 +4,14 @@ services:
     db:
         image: mariadb:10.6.5
         container_name: app_maria_db
+        restart: always
         environment:
             MYSQL_ROOT_PASSWORD: PASSWORD_ROOT
             MYSQL_DATABASE: test
             MYSQL_USER: root
-            MYSQL_PASSWORD: root
+            MYSQL_PASSWORD: root		        
         ports:
-            - '4306:3306'
+            - 3306:3306
         volumes:
             - .db:/var/lib/mysql/
         networks:
@@ -39,18 +40,20 @@ services:
             - .App:/var/www/symfony
         networks:
             - app
-#    nginx:
-#        container_name: app_nginx
-#        depends_on:
-#            - php
-#        build:
-#            context: .
-#            dockerfile: Dockerfile-nginx
-#        ports:
-#            - 8000:80
-#            - 8443:443
-#        networks:
-#            - app
+    nginx:
+        container_name: app_nginx
+        depends_on:
+            - php
+        build:
+            context: .
+            dockerfile: Dockerfile-nginx
+        volumes:
+            - .App:/var/www/symfony
+        ports:
+            - 8001:80
+            - 8443:443
+        networks:
+            - app
 
 networks:
     app:
